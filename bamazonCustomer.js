@@ -32,8 +32,6 @@ connection.connect(function(err) {
  console.log('connected')
 
  startSale();
-// buyItem();
- //connection.end();
 });
 function startSale() {
   // query the database for all items being auctioned
@@ -109,8 +107,7 @@ function GetDepartment() {
 }
 //
 function buyItem(DepartmentResponse) {
-  console.log('in buyItem');
-  console.log(DepartmentResponse);
+ // console.log(DepartmentResponse);
   // query the database for all items being auctioned
   connection.query( "SELECT * FROM products WHERE ?",{department_name: DepartmentResponse.department},function(err, results) {
     if (err) throw err;
@@ -148,39 +145,39 @@ function buyItem(DepartmentResponse) {
       .then(function(inquirerResponse) {
     if (inquirerResponse.confirm) {
       var chosenItem;
-      console.log(results.length);
-      console.log(inquirerResponse.choice);
+     // console.log(results.length);
+     // console.log(inquirerResponse.choice);
       str = inquirerResponse.choice;
-      console.log(str);
+     // console.log(str);
       var userChoice = str.split(", ")
        //var userChoice = str[0] - 1;
-      console.log(userChoice)
+     // console.log(userChoice)
       userChoice = userChoice[0];
-      console.log('after parsing')
-      console.log(userChoice)
+      //console.log('after parsing')
+     // console.log(userChoice)
       for (var i = 0; i < results.length; i++) {
         if (results[i].product_name == userChoice) { 
           chosenItem = results[i];
-          console.log(chosenItem);
+          //console.log(chosenItem);
         }
       }   
-      console.log(inquirerResponse)
-      console.log(chosenItem)
-      console.log(chosenItem.item_id)
+     // console.log(inquirerResponse)
+      //console.log(chosenItem)
+      //console.log(chosenItem.item_id)
       connection.query(
         "SELECT * FROM products WHERE ?",{item_id: chosenItem.item_id},
         function(err, results) {
           if (err) throw err;
-          console.log(inquirerResponse)
-          console.log(results[0])
+        //  console.log(inquirerResponse)
+        //  console.log(results[0])
           //
           qty = parseInt(inquirerResponse.qty)
           if (results[0].stock_quanity > qty){
             var totalPurchase = (qty * chosenItem.price);
             var msg = `Your purchase of ${inquirerResponse.qty} ${chosenItem.product_name} ${chosenItem.department_name} comes to ${totalPurchase}`
             var newQty = results[0].stock_quanity - qty;
-            console.log(newQty);
-            console.log(chosenItem.item_id)
+          //  console.log(newQty);
+          //  console.log(chosenItem.item_id)
             connection.query(
               "UPDATE products SET ? WHERE ?",
               [
