@@ -35,10 +35,36 @@ connection.connect(function(err) {
 // buyItem();
  //connection.end();
 });
-
-
 function startSale() {
   // query the database for all items being auctioned
+  connection.query("SELECT department_name from products group by department_name;", function(err, results) {
+    if (err) throw err;
+    //console.log(results);
+    inquirer
+      .prompt([
+       // Here we ask the user to confirm.
+       {
+        type: "confirm",
+        message: `Welcome to Bamazon, would like to purchase an item?:`,
+        name: "confirm",
+        default: true
+      }
+      ])
+      .then(function(startResponse) {
+    if (startResponse.confirm) {
+//      console.log(startResponse)
+      GetDepartment();
+  }
+    else {
+      console.log("\nThat's okay, let me know when you are ready to shop again.\n");
+      connection.end();
+    };
+  })
+})
+}
+
+function GetDepartment() {
+  // query the database for all departments
   connection.query("SELECT department_name from products group by department_name;", function(err, results) {
     if (err) throw err;
     //console.log(results);
@@ -69,34 +95,24 @@ function startSale() {
         default: true
       }
       ])
-      .then(function(inquirerResponse) {
-    // If the inquirerResponse confirms, we displays the inquirerResponse's username and pokemon from the answers.
-    if (inquirerResponse.confirm) {
-      //console.log('cmd in inqurire ' + inquirerResponse.cmd);
-      //console.log('searchValue from inqurier ' + inquirerResponse.searchValue);
-     // cmd = inquirerResponse.cmd;
-      //searchValue = inquirerResponse.searchValue;
-      //processCmd(cmd, searchValue);
-      console.log(inquirerResponse)
-     // department = inquirerResponse.department
-     // console.log(department)
-      buyItem(inquirerResponse);
+      .then(function(DepartmentResponse) {
+        if (DepartmentResponse.confirm) {
+            buyItem(DepartmentResponse);
 
-    }
-    else {
+      }
+        else {
       console.log("\nThat's okay, let me know when you are ready to shop again.\n");
-      connection.end();
-    };
-  })
- //connection.end();
+      startSale();
+      };
+    })
 })
 }
 //
-function buyItem(inquirerResponse) {
+function buyItem(DepartmentResponse) {
   console.log('in buyItem');
-  console.log(inquirerResponse);
+  console.log(DepartmentResponse);
   // query the database for all items being auctioned
-  connection.query( "SELECT * FROM products WHERE ?",{department_name: inquirerResponse.department},function(err, results) {
+  connection.query( "SELECT * FROM products WHERE ?",{department_name: DepartmentResponse.department},function(err, results) {
     if (err) throw err;
     //console.log(results);
     // once you have the items, prompt the user for which they'd like to bid on
@@ -105,7 +121,6 @@ function buyItem(inquirerResponse) {
           {
             name: "choice",
             type: "rawlist",
-            //choices: ["POST", "BID", "EXIT"],
             choices: function() {
               var choiceArray = [];
               for (var i = 0; i < results.length; i++) {
@@ -131,7 +146,6 @@ function buyItem(inquirerResponse) {
       }
       ])
       .then(function(inquirerResponse) {
-    // If the inquirerResponse confirms, we displays the inquirerResponse's username and pokemon from the answers.
     if (inquirerResponse.confirm) {
       var chosenItem;
       console.log(results.length);
@@ -187,17 +201,17 @@ function buyItem(inquirerResponse) {
           else{
             msg = `Sorry we only ${results[0].stock_quanity} in stock for ${chosenItem.product_name} ${chosenItem.department_name}`
             console.log(msg);
+            startSale();
           }
      
          })
         }
          else {
            console.log("\nThat's okay, let me know when you are ready to purchase an item.\n");
-           startSale()
+           startSale();
          }
         }
 
 )
-
 })
 };
