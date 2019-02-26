@@ -84,7 +84,8 @@ function startSale() {
 
     }
     else {
-      console.log("\nThat's okay, let me know when you are ready to the search again.\n");
+      console.log("\nThat's okay, let me know when you are ready to shop again.\n");
+      connection.end();
     };
   })
  //connection.end();
@@ -156,7 +157,6 @@ function buyItem(inquirerResponse) {
         "SELECT * FROM products WHERE ?",{item_id: chosenItem.item_id},
         function(err, results) {
           if (err) throw err;
-          console.log("Bid placed successfully!");
           console.log(inquirerResponse)
           console.log(results[0])
           //
@@ -164,7 +164,25 @@ function buyItem(inquirerResponse) {
           if (results[0].stock_quanity > qty){
             var totalPurchase = (qty * chosenItem.price);
             var msg = `Your purchase of ${inquirerResponse.qty} ${chosenItem.product_name} ${chosenItem.department_name} comes to ${totalPurchase}`
-            console.log(msg)
+            var newQty = results[0].stock_quanity - qty;
+            console.log(newQty);
+            console.log(chosenItem.item_id)
+            connection.query(
+              "UPDATE products SET ? WHERE ?",
+              [
+                {
+                  stock_quanity: newQty
+                },
+                {
+                  item_id: chosenItem.item_id
+                }
+              ],
+              function(err) {
+                if (err) throw err;
+                console.log(msg)
+                startSale();
+              }
+            );
           }
           else{
             msg = `Sorry we only ${results[0].stock_quanity} in stock for ${chosenItem.product_name} ${chosenItem.department_name}`
@@ -175,8 +193,8 @@ function buyItem(inquirerResponse) {
         }
          else {
            console.log("\nThat's okay, let me know when you are ready to purchase an item.\n");
+           startSale()
          }
-         connection.end();
         }
 
 )
