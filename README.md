@@ -24,13 +24,20 @@ Welcome Prompt
   
   ![alt items](ItemListSS.png)
 
+
+
 Enter the quantity to purchase.
+
 ![alt quantity](QtySS.png)
+
+
 
   Display the total amount to the customer for the purchase.
 
 
 ![alt Sales](SalesSS.png)
+
+
 
 If not enought items in stock sale fails.
 
