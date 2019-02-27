@@ -9,11 +9,15 @@
 
 
 Welcome Prompt
+
+
 ![alt Welcome to Bamazon](WelcomeSS.png)
   
 
-  Choose the department to 
-    ![alt Department](DepartmentSS.png)
+  Choose the department to purchase from.
+
+
+  ![alt Departments](DepartmentSS.png)
 
 
   Select the item you wish to purchase.
@@ -24,9 +28,13 @@ Enter the quantity to purchase.
 ![alt quantity](QtySS.png)
 
   Display the total amount to the customer for the purchase.
+
+
 ![alt Sales](SalesSS.png)
 
 If not enought items in stock sale fails.
+
+
 ![alt no Qty](noQtySS.png)
 
 ## Getting Started:
