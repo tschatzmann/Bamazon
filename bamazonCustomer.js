@@ -19,8 +19,8 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "now4kids",
-  database: "bamazon_DB"
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
 
 });
 
@@ -153,8 +153,6 @@ function buyItem(DepartmentResponse) {
           //var userChoice = str[0] - 1;
           // console.log(userChoice)
           userChoice = userChoice[0];
-          //console.log('after parsing')
-          // console.log(userChoice)
           for (var i = 0; i < results.length; i++) {
             if (results[i].product_name == userChoice) {
               chosenItem = results[i];
